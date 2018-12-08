@@ -3,13 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import store from './store' // ./store/index.js
+import LButton from './components/LButton'
+Vue.component('l-button', LButton)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    store,
+    router,
+    components: { App },
+    template: '<App/>'
 })

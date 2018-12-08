@@ -2,67 +2,56 @@
  * @Author: lf
  * @Date: 2018-12-03 17:48:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-06 16:56:37
+ * @Last Modified time: 2018-12-08 23:17:49
  * @文件说明: 首页页面
  */
 <template>
-    <div id="app">
-        <div class="index">
-            <img src="../assets/image/background.png" class="background">
-            <img src="../assets/image/background.png" class="background1">
-            <div class="gap"></div>
-            <div class="head">
-                <div class="head_count1">0</div>
-                <div class="head_count1">0</div>
-                <div class="head_count1">0</div>
-                <div class="head_count1">0</div>
-                <div class="head_count2">.</div>
+    <div class="index">
+        <div class="content">
+            <div class="content_frame">
+                <div class="content_frame_title">职业特征</div>
+                <div class="opt">
+                    <div class="opt1" :class="{opt2:content_add1==='work'}" @click="vocation('work')">上班族</div>
+                    <div class="opt1" :class="{opt2:content_add1==='company'}" @click="vocation('company')">企业主</div>
+                </div>
             </div>
-            <div class="content">
+            <div class="content_add1" v-if="content_add1==='work'">
                 <div class="content_frame">
-                    <div class="content_frame_title">职业特征</div>
+                    <div class="content_frame_title">资金类型</div>
                     <div class="opt">
-                        <div class="opt1" :class="{opt2:content_add1==='work'}" @click="vocation('work')">上班族</div>
-                        <div class="opt1" :class="{opt2:content_add1==='company'}" @click="vocation('company')">企业主</div>
+                        <div class="opt1" :class="{opt2:fundType==='cash'}" @click="fundFun('cash')">现金流水</div>
+                        <div class="opt1" :class="{opt2:fundType==='card'}" @click="fundFun('card')">打卡资金</div>
                     </div>
                 </div>
-                <div class="content_add1" v-if="content_add1==='work'">
-                    <div class="content_frame">
-                        <div class="content_frame_title">资金类型</div>
-                        <div class="opt">
-                            <div class="opt1" :class="{opt2:fundType==='cash'}" @click="fundFun('cash')">现金流水</div>
-                            <div class="opt1" :class="{opt2:fundType==='card'}" @click="fundFun('card')">打卡资金</div>
-                        </div>
-                    </div>
-                    <div class="content_frame">
-                        <div class="content_frame_title">月收入/流水</div>
-                        <div class="down" @click="down">
-                            <span class="down_text">{{down_text}}</span>
-                            <img src="../assets/image/down.png" alt="icon" class="down_icon">
-                        </div>
-                    </div>
-                    <div class="content_frame">
-                        <div class="content_frame_title">公积金</div>
-                        <div class="opt">
-                            <div class="opt1" :class="{opt2:common==='yes'}" @click="commonFun('yes')">有</div>
-                            <div class="opt1" :class="{opt2:common==='no'}" @click="commonFun('no')">无</div>
-                        </div>
+                <div class="content_frame">
+                    <div class="content_frame_title">月收入/流水</div>
+                    <div class="down" @click="down">
+                        <span class="down_text">{{down_text}}</span>
+                        <img src="../assets/image/down.png" alt="icon" class="down_icon">
                     </div>
                 </div>
-                <div class="content_add2" v-if="content_add1==='company'">
-                    <div class="content_frame">
-                        <div class="content_frame_title">月收入/流水</div>
-                        <div class="down" @click="down">
-                            <span class="down_text"> {{down_text}} </span>
-                            <img src="../assets/image/down.png" alt="icon" class="down_icon">
-                        </div>
+                <div class="content_frame">
+                    <div class="content_frame_title">公积金</div>
+                    <div class="opt">
+                        <div class="opt1" :class="{opt2:common==='yes'}" @click="commonFun('yes')">有</div>
+                        <div class="opt1" :class="{opt2:common==='no'}" @click="commonFun('no')">无</div>
                     </div>
                 </div>
             </div>
-            <div class="next">下一步</div>
-            <div class="gap"></div>
-            <div class="mask" @click="maskFun" v-if="mask"></div>
+            <div class="content_add2" v-if="content_add1==='company'">
+                <div class="content_frame">
+                    <div class="content_frame_title">月收入/流水</div>
+                    <div class="down" @click="down">
+                        <span class="down_text"> {{down_text}} </span>
+                        <img src="../assets/image/down.png" alt="icon" class="down_icon">
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- <div class="next" @click="next1">下一步</div> -->
+        <l-button @click.native="next1"></l-button>
+        <div class="gap"></div>
+        <div class="mask" @click="maskFun" v-if="mask"></div>
         <div class="sum" v-if="sum">
             <div class="zs"></div>
             <div class="ys"></div>
@@ -73,8 +62,8 @@
                 <div class="sum_close2"></div>
             </div>
             <div class="sum_money_">
-                <div class="sum_money" v-for="i in moneys" :key="i.id" @click="moneyFun(i)">
-                    <div class="sum_money_single" :class="{singlePitch:!i.single}"></div>
+                <div class="sum_money" v-for="i in moneys" :key="i.money" @click="moneyFun(i)">
+                    <div class="sum_money_single" :class="{singlePitch:i.single}"></div>
                     <span class="sum_money_text"> {{i.money}} </span>
                 </div>
             </div>
@@ -94,31 +83,38 @@
                 moneys: [
                     {
                         single: true,
-                        money: '未选择'
+                        money: '未选择',
+                        number: '0.0'
                     },
                     {
-                        single: true,
-                        money: '0-1500'
+                        single: false,
+                        money: '0-1500',
+                        number: '0.4'
                     },
                     {
-                        single: true,
-                        money: '1500-3000'
+                        single: false,
+                        money: '1500-3000',
+                        number: '0.8'
                     },
                     {
-                        single: true,
-                        money: '3000-6000'
+                        single: false,
+                        money: '3000-6000',
+                        number: '1.5'
                     },
                     {
-                        single: true,
-                        money: '6000-9000'
+                        single: false,
+                        money: '6000-9000',
+                        number: '2.3'
                     },
                     {
-                        single: true,
-                        money: '9000-12000'
+                        single: false,
+                        money: '9000-12000',
+                        number: '3.0'
                     },
                     {
-                        single: true,
-                        money: '12000以上'
+                        single: false,
+                        money: '12000以上',
+                        number: '6.0'
                     }
                 ],
                 mask: false,
@@ -126,20 +122,58 @@
             }
         },
         methods: {
+            // 职业特征选择事件
             vocation(flag) {
+                if (this.content_add1 === 'work') {
+                    this.$store.commit('addNum', {
+                        num: '5.0',
+                        flag: false
+                    })
+                } else if (this.content_add1 === 'company') {
+                    this.$store.commit('addNum', {
+                        num: '10.0',
+                        flag: false
+                    })
+                }
                 this.content_add1 = this.content_add1 === flag ? '' : flag
                 this.fundType = ''
                 this.common = ''
                 this.moneys.map(val => {
-                    val.single = true
+                    val.single = false
                 })
+                this.moneys[0].single = true
                 this.down_text = '请选择'
+                if (this.content_add1 === 'work') {
+                    this.$store.commit('addNum', {
+                        num: '5.0',
+                        flag: true
+                    })
+                } else if (this.content_add1 === 'company') {
+                    this.$store.commit('addNum', {
+                        num: '10.0',
+                        flag: true
+                    })
+                }
             },
+            // 资金类型选择事件
             fundFun(fund) {
                 this.fundType = this.fundType === fund ? '' : fund
             },
-            commonFun(common) {
-                this.common = this.common === common ? '' : common
+            // 公积金选择事件
+            commonFun(commonType) {
+                if (this.common === 'yes') {
+                    this.$store.commit('addNum', {
+                        num: '10.0',
+                        flag: false
+                    })
+                }
+                this.common = this.common === commonType ? '' : commonType
+                if (this.common === 'yes') {
+                    this.$store.commit('addNum', {
+                        num: '10.0',
+                        flag: true
+                    })
+                }
             },
             down() {
                 this.mask = true
@@ -158,76 +192,37 @@
             },
             moneyFun(i) {
                 this.moneys.map(val => {
-                    val.single = true
+                    if (val.single) {
+                        // 当single为true时：找到上一个选中的数据，使用它的number来减掉
+                        this.$store.commit('addNum', {
+                            num: val.number,
+                            flag: false
+                        })
+                    }
+                    val.single = false
                 })
-                i.single = false
+                // this.moneys.map(val => {
+                //     val.single = false
+                // })
+                i.single = true
                 this.down_text = i.money === '未选择' ? '请选择' : i.money
                 this.mask = false
                 this.sum = false
                 document.documentElement.style.overflowY = 'scroll'
+                if (i.single) {
+                    this.$store.commit('addNum', {
+                        num: i.number,
+                        flag: true
+                    })
+                }
+            },
+            next1() {
+                this.$router.push('/house')
             }
         }
     }
 </script>
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        font-size: 5.33333vw;
-        color: #fff;
-        background-size: cover;
-        -webkit-font-smoothing: antialiased;
-    }
-    .index {
-        position: relative;
-        width: 100vw;
-        min-height: 100vh;
-        background-color: #0c0a24;
-    }
-    .background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        transform: rotate(180deg);
-    }
-    .background1 {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
-    .gap {
-        height: 8.8vw;
-    }
-    .head {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        width: 69.73vw;
-        height: 13.34vw;
-        background-image: url(../assets/image/head.png);
-        margin: 0 auto;
-        padding: 24.93vw 7.535vw 9.73vw 13.395vw;
-    }
-    .head_count1 {
-        width: 11.73vw;
-        height: 13.33vw;
-        background-image: url(../assets/image/count.png);
-        margin: 0 2.865vw;
-        color: #04e3f4;
-        text-align: center;
-        line-height: 13.33vw;
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
-    .head_count2 {
-        position: absolute;
-        bottom: 10vw;
-        right: 24.2vw;
-        color: #04e3f4;
-    }
     .content_frame {
         position: relative;
         width: 90.93vw;
