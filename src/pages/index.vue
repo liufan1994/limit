@@ -2,45 +2,45 @@
  * @Author: lf
  * @Date: 2018-12-03 17:48:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-08 23:17:49
+ * @Last Modified time: 2018-12-10 23:05:12
  * @文件说明: 首页页面
  */
 <template>
     <div class="index">
         <div class="content">
             <div class="content_frame">
-                <div class="content_frame_title">职业特征</div>
+                <div class="content_frame_title"> {{vocation}} </div>
                 <div class="opt">
-                    <div class="opt1" :class="{opt2:content_add1==='work'}" @click="vocation('work')">上班族</div>
-                    <div class="opt1" :class="{opt2:content_add1==='company'}" @click="vocation('company')">企业主</div>
+                    <div class="opt1" :class="{opt2:content_add1==='work'}" @click="vocationFun('work')">上班族</div>
+                    <div class="opt1" :class="{opt2:content_add1==='company'}" @click="vocationFun('company')">企业主</div>
                 </div>
             </div>
             <div class="content_add1" v-if="content_add1==='work'">
                 <div class="content_frame">
-                    <div class="content_frame_title">资金类型</div>
+                    <div class="content_frame_title"> {{fund}} </div>
                     <div class="opt">
                         <div class="opt1" :class="{opt2:fundType==='cash'}" @click="fundFun('cash')">现金流水</div>
                         <div class="opt1" :class="{opt2:fundType==='card'}" @click="fundFun('card')">打卡资金</div>
                     </div>
                 </div>
                 <div class="content_frame">
-                    <div class="content_frame_title">月收入/流水</div>
+                    <div class="content_frame_title"> {{income}} </div>
                     <div class="down" @click="down">
                         <span class="down_text">{{down_text}}</span>
                         <img src="../assets/image/down.png" alt="icon" class="down_icon">
                     </div>
                 </div>
                 <div class="content_frame">
-                    <div class="content_frame_title">公积金</div>
+                    <div class="content_frame_title"> {{common}} </div>
                     <div class="opt">
-                        <div class="opt1" :class="{opt2:common==='yes'}" @click="commonFun('yes')">有</div>
-                        <div class="opt1" :class="{opt2:common==='no'}" @click="commonFun('no')">无</div>
+                        <div class="opt1" :class="{opt2:commonType==='yes'}" @click="commonFun('yes')">有</div>
+                        <div class="opt1" :class="{opt2:commonType==='no'}" @click="commonFun('no')">无</div>
                     </div>
                 </div>
             </div>
             <div class="content_add2" v-if="content_add1==='company'">
                 <div class="content_frame">
-                    <div class="content_frame_title">月收入/流水</div>
+                    <div class="content_frame_title">{{income}}</div>
                     <div class="down" @click="down">
                         <span class="down_text"> {{down_text}} </span>
                         <img src="../assets/image/down.png" alt="icon" class="down_icon">
@@ -48,26 +48,32 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="next" @click="next1">下一步</div> -->
         <l-button @click.native="next1"></l-button>
         <div class="gap"></div>
-        <div class="mask" @click="maskFun" v-if="mask"></div>
-        <div class="sum" v-if="sum">
-            <div class="zs"></div>
-            <div class="ys"></div>
-            <div class="zx"></div>
-            <div class="yx"></div>
-            <div class="sum_close" @click="sum_close">
-                <div class="sum_close1"></div>
-                <div class="sum_close2"></div>
-            </div>
-            <div class="sum_money_">
-                <div class="sum_money" v-for="i in moneys" :key="i.money" @click="moneyFun(i)">
-                    <div class="sum_money_single" :class="{singlePitch:i.single}"></div>
-                    <span class="sum_money_text"> {{i.money}} </span>
+        <div class="mask" @click="mask1Fun" v-if="mask1">
+            <div class="sum">
+                <div class="zs"></div>
+                <div class="ys"></div>
+                <div class="zx"></div>
+                <div class="yx"></div>
+                <div class="sum_close" @click="sum_close">
+                    <div class="sum_close1"></div>
+                    <div class="sum_close2"></div>
+                </div>
+                <div class="sum_money_">
+                    <div class="sum_money" v-for="i in moneys" :key="i.money" @click="moneyFun(i)">
+                        <div class="sum_money_single" :class="{singlePitch:i.single}"></div>
+                        <span class="sum_money_text"> {{i.money}} </span>
+                    </div>
                 </div>
             </div>
         </div>
+        <transition name="fade">
+            <div class="mask" v-if="mask2">
+                <div class="tips"> {{tipsAll}} </div>
+            </div>
+        </transition>
+
     </div>
 </template>
 <script>
@@ -79,7 +85,11 @@
                 // 资金流水：''|'cash'|'card'
                 fundType: '',
                 down_text: '请选择',
-                common: '',
+                commonType: '',
+                vocation: '职业特征',
+                fund: '资金类型',
+                income: '月收入/流水',
+                common: '公积金',
                 moneys: [
                     {
                         single: true,
@@ -117,13 +127,14 @@
                         number: '6.0'
                     }
                 ],
-                mask: false,
-                sum: false
+                mask1: false,
+                mask2: false,
+                tipsAll: ''
             }
         },
         methods: {
             // 职业特征选择事件
-            vocation(flag) {
+            vocationFun(flag) {
                 if (this.content_add1 === 'work') {
                     this.$store.commit('addNum', {
                         num: '5.0',
@@ -137,7 +148,7 @@
                 }
                 this.content_add1 = this.content_add1 === flag ? '' : flag
                 this.fundType = ''
-                this.common = ''
+                this.commonType = ''
                 this.moneys.map(val => {
                     val.single = false
                 })
@@ -160,15 +171,15 @@
                 this.fundType = this.fundType === fund ? '' : fund
             },
             // 公积金选择事件
-            commonFun(commonType) {
-                if (this.common === 'yes') {
+            commonFun(common_) {
+                if (this.commonType === 'yes') {
                     this.$store.commit('addNum', {
                         num: '10.0',
                         flag: false
                     })
                 }
-                this.common = this.common === commonType ? '' : commonType
-                if (this.common === 'yes') {
+                this.commonType = this.commonType === common_ ? '' : common_
+                if (this.commonType === 'yes') {
                     this.$store.commit('addNum', {
                         num: '10.0',
                         flag: true
@@ -176,18 +187,15 @@
                 }
             },
             down() {
-                this.mask = true
-                this.sum = true
+                this.mask1 = true
                 document.documentElement.style.overflowY = 'hidden'
             },
-            maskFun() {
-                this.mask = false
-                this.sum = false
+            mask1Fun() {
+                this.mask1 = false
                 document.documentElement.style.overflowY = 'scroll'
             },
             sum_close() {
-                this.sum = false
-                this.mask = false
+                this.mask1 = false
                 document.documentElement.style.overflowY = 'scroll'
             },
             moneyFun(i) {
@@ -217,12 +225,52 @@
                 }
             },
             next1() {
-                this.$router.push('/house')
+                if (this.content_add1 === '') {
+                    this.mask2 = true
+                    setTimeout(() => {
+                        this.mask2 = ''
+                    }, 1500)
+                    this.tipsAll = '请选择' + this.vocation
+                } else if (this.content_add1 === 'work') {
+                    if (this.fundType === '') {
+                        this.mask2 = true
+                        this.tipsAll = '请选择' + this.fund
+                    } else if (this.down_text === '请选择') {
+                        this.mask2 = true
+                        this.tipsAll = '请选择' + this.income
+                    } else if (this.commonType === '') {
+                        this.mask2 = true
+                        this.tipsAll = '请选择' + this.common
+                    } else {
+                        this.$router.push('/house')
+                    }
+                } else if (this.content_add1 === 'company') {
+                    if (this.down_text === '请选择') {
+                        this.mask2 = true
+                        this.tipsAll = '请选择' + this.income
+                    } else {
+                        this.$router.push('/house')
+                    }
+                }
             }
+            // created() {
+            //     this.$store.state.num1
+            //     this.$store.state.num2
+            //     this.$store.state.num3
+            //     this.$store.state.num4
+            // }
         }
     }
 </script>
 <style>
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s;
+    }
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
     .content_frame {
         position: relative;
         width: 90.93vw;
@@ -270,17 +318,9 @@
         width: 4.52vw;
         height: 2.66vw;
     }
-    .next {
-        position: relative;
-        width: 90.67vw;
-        height: 13.07vw;
-        font-size: 0.8rem;
-        text-align: center;
-        line-height: 13.07vw;
-        background-image: url(../assets/image/button.png);
-        margin: 16.4vw auto 0;
-    }
     .mask {
+        display: flex;
+        align-items: center;
         position: fixed;
         top: 0;
         left: 0;
@@ -288,12 +328,11 @@
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.7);
     }
-    .sum {
-        position: fixed;
-        top: 41.6vw;
-        left: 7.33vw;
+    .sum,
+    .tips {
+        position: relative;
+        margin: 0 auto;
         width: 85.33vw;
-        height: 94.67vw;
         background-color: #09083c;
         border: 0.025rem solid #0caef7;
         box-shadow: 0 0 0.25rem #0caef7;
@@ -347,9 +386,7 @@
     }
     .sum_money_ {
         width: 72.27vw;
-        height: 79.47vw;
         margin: 8vw auto;
-        /* margin-top: 8vw; */
     }
     .sum_money {
         display: flex;
@@ -368,5 +405,12 @@
     }
     .sum_money_text {
         font-size: 0.75rem;
+    }
+    .tips {
+        width: 80vw;
+        height: 10vw;
+        text-align: center;
+        line-height: 10vw;
+        font-size: 0.7rem;
     }
 </style>
