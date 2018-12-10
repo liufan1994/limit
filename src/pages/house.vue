@@ -2,7 +2,7 @@
 * @Author: lf
 * @Date: 2018-12-06 17:04:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-10 23:09:25
+ * @Last Modified time: 2018-12-11 00:16:34
 * @文件说明: 房产情况
 */
 <template>
@@ -128,8 +128,10 @@
                         this.$router.push('/car')
                     }
                 }
-            },
-            created() {}
+            }
+        },
+        created() {
+            this.$store.commit('clearNum', sessionStorage.getItem('index'))
         }
     }
 </script>

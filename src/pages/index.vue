@@ -2,7 +2,7 @@
  * @Author: lf
  * @Date: 2018-12-03 17:48:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-10 23:05:12
+ * @Last Modified time: 2018-12-11 00:25:41
  * @文件说明: 首页页面
  */
 <template>
@@ -224,24 +224,29 @@
                     })
                 }
             },
+            showMask(text) {
+                this.mask2 = true
+                setTimeout(() => {
+                    this.mask2 = ''
+                }, 1500)
+                this.tipsAll = '请选择' + text
+            },
             next1() {
                 if (this.content_add1 === '') {
-                    this.mask2 = true
-                    setTimeout(() => {
-                        this.mask2 = ''
-                    }, 1500)
-                    this.tipsAll = '请选择' + this.vocation
+                    this.showMask(this.vocation)
                 } else if (this.content_add1 === 'work') {
                     if (this.fundType === '') {
-                        this.mask2 = true
-                        this.tipsAll = '请选择' + this.fund
+                        this.showMask(this.fund)
                     } else if (this.down_text === '请选择') {
-                        this.mask2 = true
-                        this.tipsAll = '请选择' + this.income
+                        this.showMask(this.income)
                     } else if (this.commonType === '') {
                         this.mask2 = true
                         this.tipsAll = '请选择' + this.common
                     } else {
+                        sessionStorage.setItem(
+                            'index',
+                            sessionStorage.getItem('sum')
+                        )
                         this.$router.push('/house')
                     }
                 } else if (this.content_add1 === 'company') {
@@ -249,16 +254,17 @@
                         this.mask2 = true
                         this.tipsAll = '请选择' + this.income
                     } else {
+                        sessionStorage.setItem(
+                            'index',
+                            sessionStorage.getItem('sum')
+                        )
                         this.$router.push('/house')
                     }
                 }
             }
-            // created() {
-            //     this.$store.state.num1
-            //     this.$store.state.num2
-            //     this.$store.state.num3
-            //     this.$store.state.num4
-            // }
+        },
+        created() {
+            this.$store.commit('clearNum', '000.0')
         }
     }
 </script>

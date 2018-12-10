@@ -9,7 +9,9 @@
             <div class="head_count1">{{$store.state.num4}}</div>
             <div class="head_count2">.</div>
         </div>
+        <!-- <keep-alive> -->
         <router-view class="routerView"></router-view>
+        <!-- </keep-alive> -->
         <img src="./assets/image/background.png" class="background1">
     </div>
 </template>

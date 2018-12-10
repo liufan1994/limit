@@ -7,7 +7,8 @@ export default new Vuex.Store({
         num1: 0,
         num2: 0,
         num3: 0,
-        num4: 0
+        num4: 0,
+        sumNum: 0
     },
     mutations: {
         addNum(state, obj) {
@@ -52,6 +53,21 @@ export default new Vuex.Store({
                 state.num3 = 9
                 state.num4 = 9
             }
+            let sum =
+                state.num1 * 100 +
+                state.num2 * 10 +
+                state.num3 +
+                state.num4 * 0.1
+            sessionStorage.setItem('sum', sum.toFixed(1))
+        },
+        clearNum(state, num) {
+            num = String(num)
+            if (num.length === 3) num = '00' + num
+            else if (num.length === 4) num = '0' + num
+            state.num1 = Number(num[0])
+            state.num2 = Number(num[1])
+            state.num3 = Number(num[2])
+            state.num4 = Number(num[4])
         }
     }
 })
