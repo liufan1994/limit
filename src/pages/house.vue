@@ -2,12 +2,14 @@
 * @Author: lf
 * @Date: 2018-12-06 17:04:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-11 14:07:02
+ * @Last Modified time: 2018-12-11 19:18:56
 * @文件说明: 房产情况
 */
 <template>
     <div class="house">
+        <!-- 操作内容 -->
         <div class="content">
+            <!-- 大内容选择：房产情况 -->
             <div class="content_frame">
                 <div class="content_frame_title"> {{property}} </div>
                 <div class="opt">
@@ -15,6 +17,7 @@
                     <div class="opt1" :class="{opt2:content_add1==='no'}" @click="propertyFun('no')">无</div>
                 </div>
             </div>
+            <!-- 房产情况选择1：有 -->
             <div class="content_add1" v-if="content_add1==='yes'">
                 <div class="content_frame">
                     <div class="content_frame_title"> {{input}} </div>
@@ -149,7 +152,7 @@
 <style>
     .fade-enter-active,
     .fade-leave-active {
-        transition: opacity 1s;
+        transition: opacity 0.5s;
     }
     .fade-enter,
     .fade-leave-to {
@@ -219,10 +222,15 @@
         background-color: rgba(0, 0, 0, 0.7);
     }
     .tips {
+        position: relative;
         width: 80vw;
         height: 10vw;
         text-align: center;
         line-height: 10vw;
         font-size: 0.7rem;
+        margin: 0 auto;
+        background-color: #09083c;
+        border: 0.025rem solid #0caef7;
+        box-shadow: 0 0 0.25rem #0caef7;
     }
 </style>

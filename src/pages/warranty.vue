@@ -2,14 +2,14 @@
  * @Author: lf
  * @Date: 2018-12-10 14:21:17
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-10 16:08:09
+ * @Last Modified time: 2018-12-11 17:21:34
  * @文件说明:保单情况
  */
 <template>
     <div class="warranty">
         <div class="content">
             <div class="content_frame">
-                <div class="content_frame_title">保单情况</div>
+                <div class="content_frame_title"> {{warranty}} </div>
                 <div class="opt">
                     <div class="opt1" :class="{opt2:content_add1==='yes'}" @click="warrantyFun('yes')">有</div>
                     <div class="opt1" :class="{opt2:content_add1==='no'}" @click="warrantyFun('no')">无</div>
@@ -17,7 +17,7 @@
             </div>
             <div class="content_add1" v-if="content_add1==='yes'">
                 <div class="content_frame">
-                    <div class="content_frame_title">缴费期限</div>
+                    <div class="content_frame_title"> {{term}} </div>
                     <div class="down" @click="down">
                         <span class="down_text"> {{down_text}} </span>
                         <img src="../assets/image/down.png" alt="icon" class="down_icon">
@@ -45,6 +45,11 @@
                 </div>
             </div>
         </div>
+        <transition name="fade">
+            <div class="mask" v-if="mask2">
+                <div class="tips"> {{tipsAll}} </div>
+            </div>
+        </transition>
     </div>
 </template>
 <script>
@@ -76,7 +81,10 @@
                     }
                 ],
                 mask: false,
-                sum: false
+                sum: false,
+                warranty: '保单情况',
+                term: '缴费期限',
+                mask2: false
             }
         },
         methods: {
@@ -121,13 +129,49 @@
                 this.sum = false
                 document.documentElement.style.overflowY = 'scroll'
             },
+            showMask(text) {
+                this.mask2 = true
+                setTimeout(() => {
+                    this.mask2 = ''
+                }, 1500)
+                this.tipsAll = '请选择' + text
+            },
             next4() {
-                this.$router.push('/infor')
+                if (this.content_add1 === '') {
+                    this.showMask(this.warranty)
+                } else if (this.content_add1 === 'yes') {
+                    if (this.down_text === '请选择') {
+                        this.showMask(this.term)
+                    } else {
+                        sessionStorage.setItem(
+                            'warranty',
+                            sessionStorage.getItem('sum')
+                        )
+                        this.$router.push('/infor')
+                    }
+                } else {
+                    sessionStorage.setItem(
+                        'warranty',
+                        sessionStorage.getItem('sum')
+                    )
+                    this.$router.push('/infor')
+                }
             }
+        },
+        created() {
+            this.$store.commit('clearNum', sessionStorage.getItem('car'))
         }
     }
 </script>
 <style>
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s;
+    }
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
     .content_frame {
         position: relative;
         width: 90.93vw;
@@ -261,5 +305,17 @@
     }
     .sum_money_text {
         font-size: 0.75rem;
+    }
+    .tips {
+        position: relative;
+        width: 80vw;
+        height: 10vw;
+        text-align: center;
+        line-height: 10vw;
+        font-size: 0.7rem;
+        margin: 0 auto;
+        background-color: #09083c;
+        border: 0.025rem solid #0caef7;
+        box-shadow: 0 0 0.25rem #0caef7;
     }
 </style>

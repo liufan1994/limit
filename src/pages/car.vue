@@ -2,7 +2,7 @@
  * @Author: lf
  * @Date: 2018-12-10 14:03:29
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-11 16:05:05
+ * @Last Modified time: 2018-12-11 17:20:49
  * @文件说明:车产情况
  */
 <template>
@@ -51,7 +51,8 @@
                 _inputMoney: '',
                 car: '车产情况',
                 input: '车产价值',
-                mortgage: '按揭/全款'
+                mortgage: '按揭/全款',
+                mask2: false
             }
         },
         methods: {
@@ -120,17 +121,17 @@
                     sessionStorage.setItem('car', sessionStorage.getItem('sum'))
                     this.$router.push('/warranty')
                 }
-            },
-            created() {
-                this.$store.commit('clearNum', sessionStorage.getItem('house'))
             }
+        },
+        created() {
+            this.$store.commit('clearNum', sessionStorage.getItem('house'))
         }
     }
 </script>
 <style>
     .fade-enter-active,
     .fade-leave-active {
-        transition: opacity 1s;
+        transition: opacity 0.5s;
     }
     .fade-enter,
     .fade-leave-to {
@@ -200,10 +201,15 @@
         background-color: rgba(0, 0, 0, 0.7);
     }
     .tips {
+        position: relative;
         width: 80vw;
         height: 10vw;
         text-align: center;
         line-height: 10vw;
         font-size: 0.7rem;
+        margin: 0 auto;
+        background-color: #09083c;
+        border: 0.025rem solid #0caef7;
+        box-shadow: 0 0 0.25rem #0caef7;
     }
 </style>
