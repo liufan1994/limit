@@ -2,7 +2,7 @@
  * @Author: lf
  * @Date: 2018-12-10 14:03:29
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-11 17:20:49
+ * @Last Modified time: 2018-12-11 21:15:52
  * @文件说明:车产情况
  */
 <template>
@@ -43,6 +43,7 @@
 </template>
 <script>
     export default {
+        name: 'car',
         data() {
             return {
                 content_add1: '',
