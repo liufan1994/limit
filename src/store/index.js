@@ -56,9 +56,10 @@ export default new Vuex.Store({
             let sum =
                 state.num1 * 100 +
                 state.num2 * 10 +
-                state.num3 +
+                state.num3 * 1 +
                 state.num4 * 0.1
             sessionStorage.setItem('sum', sum.toFixed(1))
+            console.log(sum)
         },
         clearNum(state, num) {
             num = String(num)

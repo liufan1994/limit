@@ -2,36 +2,36 @@
 * @Author: lf
 * @Date: 2018-12-06 17:04:24
  * @Last Modified by: lf
- * @Last Modified time: 2018-12-11 00:16:34
+ * @Last Modified time: 2018-12-11 14:07:02
 * @文件说明: 房产情况
 */
 <template>
     <div class="house">
         <div class="content">
             <div class="content_frame">
-                <div class="content_frame_title">房产情况</div>
+                <div class="content_frame_title"> {{property}} </div>
                 <div class="opt">
-                    <div class="opt1" :class="{opt2:content_add1==='yes'}" @click="property('yes')">有</div>
-                    <div class="opt1" :class="{opt2:content_add1==='no'}" @click="property('no')">无</div>
+                    <div class="opt1" :class="{opt2:content_add1==='yes'}" @click="propertyFun('yes')">有</div>
+                    <div class="opt1" :class="{opt2:content_add1==='no'}" @click="propertyFun('no')">无</div>
                 </div>
             </div>
             <div class="content_add1" v-if="content_add1==='yes'">
                 <div class="content_frame">
-                    <div class="content_frame_title">房产价值</div>
+                    <div class="content_frame_title"> {{input}} </div>
                     <div class="inputDiv">
                         <input type="number" placeholder="请输入" class="inputDiv_input" v-model="inputMoney" @blur="inputFun">
                         <p class="inputDiv_text">万元</p>
                     </div>
                 </div>
                 <div class="content_frame">
-                    <div class="content_frame_title">是否有证</div>
+                    <div class="content_frame_title"> {{paper}} </div>
                     <div class="opt">
                         <div class="opt1" :class="{opt2:paperType==='yes'}" @click="paperFun('yes')">有</div>
                         <div class="opt1" :class="{opt2:paperType==='no'}" @click="paperFun('no')">无</div>
                     </div>
                 </div>
                 <div class="content_frame">
-                    <div class="content_frame_title">按揭/全款</div>
+                    <div class="content_frame_title"> {{mortgage}} </div>
                     <div class="opt">
                         <div class="opt1" :class="{opt2:mortgageType==='yes'}" @click="mortgageFun('yes')">按揭</div>
                         <div class="opt1" :class="{opt2:mortgageType==='no'}" @click="mortgageFun('no')">全款</div>
@@ -57,12 +57,16 @@
                 mortgageType: '',
                 inputMoney: '',
                 _inputMoney: '',
-                mask2: false
+                mask2: false,
+                property: '房产情况',
+                input: '房产价值',
+                paper: '是否有证',
+                mortgage: '按揭/全款'
             }
         },
         methods: {
             // 房产情况选择事件
-            property(flag) {
+            propertyFun(flag) {
                 if (this.content_add1 === 'yes') {
                     this.$store.commit('addNum', {
                         num: '10.0',
@@ -103,30 +107,37 @@
             mortgageFun(mortgage) {
                 this.mortgageType = this.mortgageType === mortgage ? '' : mortgage
             },
+            showMask(text) {
+                this.mask2 = true
+                setTimeout(() => {
+                    this.mask2 = ''
+                }, 1500)
+                this.tipsAll = '请选择' + text
+            },
             next2() {
                 if (this.content_add1 === '') {
-                    this.mask2 = true
-                    this.tipsAll = '请选择' + this.vocation
-                } else if (this.content_add1 === 'work') {
-                    if (this.fundType === '') {
+                    this.showMask(this.property)
+                } else if (this.content_add1 === 'yes') {
+                    if (this.inputMoney === '') {
                         this.mask2 = true
-                        this.tipsAll = '请选择' + this.fund
-                    } else if (this.down_text === '请选择') {
-                        this.mask2 = true
-                        this.tipsAll = '请选择' + this.income
-                    } else if (this.commonType === '') {
-                        this.mask2 = true
-                        this.tipsAll = '请选择' + this.common
+                        setTimeout(() => {
+                            this.mask2 = ''
+                        }, 1500)
+                        this.tipsAll = '请填写' + this.input
+                    } else if (this.paperType === '') {
+                        this.showMask(this.paper)
+                    } else if (this.mortgageType === '') {
+                        this.showMask(this.mortgage)
                     } else {
+                        sessionStorage.setItem(
+                            'house',
+                            sessionStorage.getItem('sum')
+                        )
                         this.$router.push('/car')
                     }
-                } else if (this.content_add1 === 'company') {
-                    if (this.down_text === '请选择') {
-                        this.mask2 = true
-                        this.tipsAll = '请选择' + this.income
-                    } else {
-                        this.$router.push('/car')
-                    }
+                } else {
+                    sessionStorage.setItem('house', sessionStorage.getItem('sum'))
+                    this.$router.push('/car')
                 }
             }
         },
