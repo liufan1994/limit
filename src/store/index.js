@@ -20,22 +20,30 @@ export default new Vuex.Store({
             state.num4 += num[len - 1] * a
             if (state.num4 >= 10) {
                 state.num4 = state.num4 + ''
-                state.num4 = state.num4[1]
-                state.num3 += state.num4[0]
+                state.num3 += state.num4[0] * 1
+                state.num4 = state.num4[1] * 1
+            } else if (state.num4 < 0) {
+                state.num4 = state.num4 + ''
+                state.num3 -= 1
+                state.num4 = 10 - state.num4[1]
             }
             state.num3 += num[len - 3] * a
             if (state.num3 >= 10) {
                 state.num3 = state.num3 + ''
-                state.num3 = state.num3[1]
-                state.num2 += state.num3[0]
+                state.num2 += state.num3[0] * 1
+                state.num3 = state.num3[1] * 1
+            } else if (state.num3 < 0) {
+                state.num3 = state.num3 + ''
+                state.num2 -= 1
+                state.num3 = 10 - state.num3[1]
             }
             // 7000.0
             // '111.1'
-            if (len == 5) {
+            if (len == 4) {
+                state.num2 += num[0] * a
+            } else if (len == 5) {
                 state.num1 += num[0] * a
                 state.num2 += num[1] * a
-            } else if (len == 4) {
-                state.num2 += num[0] * a
             } else if (len > 5) {
                 state.num1 = 9
                 state.num2 = 9
@@ -44,8 +52,12 @@ export default new Vuex.Store({
             }
             if (state.num2 >= 10) {
                 state.num2 = state.num2 + ''
-                state.num2 = state.num2[1]
-                state.num1 += state.num2[0]
+                state.num1 += state.num2[0] * 1
+                state.num2 = state.num2[1] * 1
+            } else if (state.num2 < 0) {
+                state.num2 = state.num2 + ''
+                state.num1 -= 1
+                state.num2 = 10 - state.num2[1]
             }
             if (state.num1 >= 10) {
                 state.num1 = 9
