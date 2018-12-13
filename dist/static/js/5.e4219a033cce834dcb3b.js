@@ -1,0 +1,2 @@
+webpackJsonp([5],{Tl0t:function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var s={render:function(){var t=this.$createElement;return(this._self._c||t)("div",{staticClass:"about"},[this._v("\n    关于我们\n")])},staticRenderFns:[]},a=n("VU/8")({name:"about",data:function(){return{}},methods:{}},s,!1,null,null,null);e.default=a.exports}});
+//# sourceMappingURL=5.e4219a033cce834dcb3b.js.map
